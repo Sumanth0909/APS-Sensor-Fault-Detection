@@ -11,7 +11,7 @@ Data file - "aps_failure_training_set1.csv" <br>
 Requirements for the environment - "requirements.txt" <br>
 
 ### Supporting files/folders (.ipynb files or notebook files)
-These are the files/folders that consists of various experiments, EDA, preprocessing steps and other supporting steps necessary to come to certain conclusions and to run the project sommthly. <br>
+These are the files/folders that consists of various experiments, EDA, preprocessing steps and other supporting steps necessary to come to certain conclusions and to run the project smoothly. <br>
 "EDA and Preprocessing" folder <br>
 Validation(ipynb) folder <br>
 
