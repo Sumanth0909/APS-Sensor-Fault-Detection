@@ -10,6 +10,11 @@ Clearly, it is a BINARY CLASSIFICATION problem statement in Machine Learning. <b
 Data file - "aps_failure_training_set1.csv" <br>
 Requirements for the environment - "requirements.txt" <br>
 
+### Supporting files/folders (.ipynb files or notebook files)
+These are the files/folders that consists of various experiments, EDA, preprocessing steps and other supporting steps necessary to come to certain conclusions and to run the project sommthly. <br>
+"EDA and Preprocessing" folder <br>
+Validation(ipynb) folder <br>
+
 ### What was done in the project?
 •	Designed the complete Training Pipeline (which consists of these components - Data Ingestion, Data Validation, Data Transformation, Model Trainer, Model Evaluation, Model Pusher) <br>
 •	Incorporated scope for Re-Training or Continuous Training <br>
