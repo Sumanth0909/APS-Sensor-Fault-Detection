@@ -1,0 +1,493 @@
+We have been given with only these - "requirements.txt" , "problem_statement.txt" and raw input
+
+For any ML Project, the TRAINING PIPELINE is as follows -
+Data ingestion -> Data validation -> Data transformation -> Model trainer -> Model evaluation -> Model pusher
+
+1) Data ingestion = Fetch the data from the DataBase and split into train set and test set
+2) Data validation = Check whether the (new) data for prediction, is aligned with the data on which the model is
+                     trained on, ie the distribution of (each columns or each features from) both these should be 
+		     same or almost same
+		     If it is not same, then we have to go for RE-TRAINING or CONTINUOUS TRAINIG our model 
+		     (ie with old data + new data -- together)
+3) Data transformation 
+4) Model trainer = Actual training of the model
+5) Model evaluation = Compare the trained model with the model which is already being used (ie is in production)
+6) Model pusher = Store the trained model (whichever is the best one after phase 5) inside hard drive or cloud etc etc
+		  
+-------------------------------------------------------------------------------------------------------------
+
+			I) EDA and Preprocessing
+
+raw input is converted into "aps_failure_training_set1.csv"
+EDA and Preprocessing is done - refer the "EDA and Preprocessing" folder
+
+--------------------------------------------------------------------------------------------------------------
+
+			II) Push the data into MongoDB
+
+
+1) Open VS Code
+
+2) Create a new file named as "aps fault detection.py"   in the directory -- 
+"E:\E\DATA SCIENCE INEURON\Machine Learning Projects (Industry Grade Projects)\1) Sensor Fault Detection"
+
+3) Click on 3 dots -> New Terminal -> let it be "powershell" itself
+
+4) In the terminal, execute this command -- 
+cd "E:\E\DATA SCIENCE INEURON\Machine Learning Projects (Industry Grade Projects)\1) Sensor Fault Detection"
+
+5) In the terminal, execute this command --
+"conda create -n aps_env python=3.7 -y"      -- this will create a new environment called as "aps_env"
+
+6) In the terminal, execute this command --
+"conda activate aps_env"                    -- to activate the "aps_env" environment
+
+7) In the terminal, execute this command --
+"pip install -r requirements.txt"
+The file "requirements.txt" contains the essential things needed for this project
+(NOTE -- this "requirements.txt" file was already given to us first itself)
+
+
+8) We have to connect to MongoDB --- and we have to dump our csv file into MongoDB (in the form of 'json' files)
+Each row (from csv) is converted into a file (json file) inside MongoDB
+"data_dump.py" file contains code to do this
+
+---------------------------------------------------------------------------------------------------------------
+
+			III) Creating an overall structure for the project 
+ 
+
+9) ALWAYS, WE HAVE TO CREATE A FILE NAMED AS "setup.py" file -- this should be the 1st file to be created in ANY PROJECT THAT WE DO
+"setup.py" file is used so that we can import and use our project in any other system - just like we import and use "Pandas" library
+Also inside the "requirements.txt" file, we have a line "-e .". This line very very important -- due to this line itself, we will be able to install/import our project as a library elsewhere
+
+SO, OVERALL (setup.py + -e .) = BOTH TOGETHER ARE VERY VERY IMPORTANT AND IS A MUST IN EVERY PROJECT!!!!! 
+
+
+10) In the terminal, execute this command --
+"python setup.py install"    
+Now, we will see that a folder is automatically created named as "sensor.egg-info" -- which contains all the information about our entire project
+
+
+NOW, WE ARE ALL SET TO START OUR ML PROJECT IN REAL -- ie from now on, our entire concentration will be ONLY ON THE "sensor" FOLDER 
+           
+---------------------------------------------------------------------------------------------------------------
+			
+			Some additional "must-know" info --
+
+
+* For any ML Project, the TRAINING PIPELINE is as follows -
+Data ingestion -> Data validation -> Data transformation -> Model trainer -> Model evaluation -> Model pusher
+(There is nothing called as "Testing" pipeline)
+
+* Each of the block in above pipeline is called as COMPONENT OF THE PIPELINE
+
+* ARTIFACT = An artifact is a machine learning term that is used to describe the output created by the training process. Output could be a fully trained model, a model checkpoint, a graph or a file created during the training process ie an output of each of the components of the pipeline, is called as an artifact
+
+* CONFIGURATION = input to each of the components of the pipeline, is called as configuration
+
+* ENTITY = An entity refers to something that exists and can be identified as a distinct and independent unit. In the context of technology, computing, programming, and communications, an entity is often used to represent objects or concepts within a system ie an entity is something that exists - it is an object around which something will happen.
+Example - A student can take admission in a college. Here, "student" is an entity and "college" is also an entity. And there exists some "relation" between these entities
+
+We will categorize ARTIFACTs (outputs) and CONFIGURATIONs (inputs) as entities. This is useful suppose if we want to store our ARTIFACTs (outputs) and CONFIGURATIONs (inputs) into some databases - we will have to have a good structure in that case
+
+
+	
+	Now, we will start building this pipeline
+
+----------------------------------------------------------------------------------------------------------------
+
+11) Inside the "sensor" folder, create a new folder called as "components"
+    Inside the "sensor" folder, create a new folder called as "pipeline"
+    Inside the "sensor" folder, create a new folder called as "entity" - created to define the structure for the      	                                                                 inputs and outputs of our component
+									 If we do not define the structure for the 
+									 inputs and outputs, we cannot run the 
+									 training pipeline
+
+12) Create a file named as "__init__.py" inside each of these 3 folders (components, pipeline, entity).
+(Any folder which contains the "__init__.py" file -- it will be considered as a part of this project or package and "find_packages()" (inside "setup.py" file) will search for all these and consider them to be a part of this project or package
+
+13) We have now created the main folders that we will need. But, also we will require some HELPER FUNCTIONs (like to save our model, load our model, push our artifacts into some database etc etc).
+So inside the "sensor" folder, we will create a new folder called as "utils" folder - and we will define all the HELPER FUNCTIONs inside the "utils" folder.
+Also, create "__init__.py" file inside the "utils" folder
+
+-----------------------------------------------------------------------------------------------------------------
+
+14) We have to first define - the input for each component, output of each component. We will do this in the "entity" folder.
+Inside the "entity" folder, create a new file called as "config_entity.py" -- input structure for each component
+Inside the "entity" folder, create a new file called as "artifact_entity.py" - output structure for each component
+
+We have to define 6 configurations and 6 artifacts in our project
+Refer "config_entity.py" file and then refer "artifact_entity.py" file
+
+15) We have to create the COMPONENTS OF THE PIPELINE. Since we have 6 blocks/components in the pipeline, 
+Inside the "components" folder, create a new file called as "data_ingestion.py"
+Inside the "components" folder, create a new file called as "data_validation.py"
+Inside the "components" folder, create a new file called as "data_transformation.py"
+Inside the "components" folder, create a new file called as "model_trainer.py"
+Inside the "components" folder, create a new file called as "model_evaluation.py"
+Inside the "components" folder, create a new file called as "model_pusher.py"
+
+16) We have to create the PIPELINE 
+Inside the "pipeline" folder, create a new file called as "training_pipeline.py"
+
+-----------------------------------------------------------------------------------------------------------------
+
+17) Apart from these, we have to create 2 more files - which are used across industries in every project - one file for "logging" and one file for "exceptions"
+Inside the "sensor" folder, create a new file called as "logger.py"
+Inside the "sensor" folder, create a new file called as "exception.py"
+
+18) Refer the file "logger.py" and then the file "exception.py"
+
+19) Inside the main project folder ie "Sensor Fault Detection" folder, create a new file called as "main.py"
+then, refer the file "main.py" -- (A) -- this was just a demonstration of how we get our custom exceptions and our logs
+(We will come back to "main.py" file) 
+----------------------------------------------------------------------------------------------------------------
+
+20) Let us start with the data first - our data is in MongoDB (in the form of JSON files)
+Let us get this data from the MongoDB -- we want it in the form of "DataFrame"
+To do this, let us write the code in "utils" folder 
+Inside the "utils" folder, create a new file called as "utils.py" -- (A) -- then, refer the file "utils.py"
+(We will come back to "utils.py" file) 
+
+21) Inside the "data_dump.py" file (inside the main folder ie "Sensor Fault Detection" folder), we had already created the connection to mongoDB. But there can be so many connections to our project - which can cause confusion. So, the best practice is to -- create a new folder and maintain the configurations (connections) there itself. So, let us create a new file.
+Inside the "sensor" folder, create a new file called as "config.py" -- to write connections related code -- for example, connection with MongoDB
+
+22) Refer step 21) -- inside the "config.py" file, we have the URL (MongoDB URL)
+However, it is not a good practice to hardcode the URL in the source code -- so we will create a new file called as ".env" inside the main folder (ie inside the "Sensor Fault Detection" folder) this ".env" file is an "environment file" -- and we can read the values from it, anywhere else too, if required
+this ".env" file contains all the secret URLs and access keys etc -- which we are supposed to hide from public
+if we expose these secret data inside our source code, anyone in the public will be able to read/access the secret informations
+so to avoid this, we use ".env" file -- and this ".env" file will not be uploaded in GitHub 
+
+23) So, let us create a class called as "EnvironmentVariable" inside the "config.py" file -- to read/access all the "environment variables" -- then, refer "config.py" file
+
+24) To make sure that our "environment variables" (the variables which are there inside ".env" file) are accessible everywhere else too, we have to write a code in "__init__.py" file inside the "sensor" folder
+Refer the "__init__.py" file inside the "sensor" folder
+
+25) Now that we have set up some system to use the "Environment variables" from anywhere, go back to "config.py" file inside the "sensor" folder -- and complete the setup for "mongo_client" variable
+
+26) Now that we have set up the "mongo_client" variable and we can call/use it anywhere, go back to "utils.py" file inside the "utils" folder -- and complete the 'get_collection_as_dataframe' function  --- ie (B) -----
+
+27) Just to test whether our logger and exception is working fine or not, go back to "main.py" file inside the main project folder ie "Sensor Fault Detection" folder and test/see for the logs ---- ie (B) ----
+
+----------------------------------------------------------------------------------------------------------------
+
+Now that we have got our DataFrame from MongoDB, we can start our project (for real!!)
+
+Now, let us come back to inputs and outputs.
+
+
+28) We will define the inputs (configurations) and outputs (artifacts) for the first component (Data Ingestion)
+Go to the "config_entity.py" inside the "entity" folder 
+We will start with the "TrainingPipelineConfig" class
+Refer "config_entity.py" file inside the "entity" folder
+
+---------------------------------------------------------------------------------------------------------------
+
+	Working on "Data Ingestion" component from the training pipeline 
+
+
+In this stage, we will fetch the data from the DataBase and split into train set and test set
+
+29) Then, we will complete the "DataIngestionConfig" class - within "config_entity.py" inside the "entity" folder
+Refer "config_entity.py" file inside the "entity" folder
+
+30) Now, our input to the "Data Ingestion" component is ready. So, now we can work on the "Data Ingestion" COMPONENT itself
+Refer "data_ingestion.py" file inside the "components" folder
+
+31) Now, we will define the output of "Data Ingestion" component
+Refer "artifact_entity.py" file inside the "entity" folder
+and then go back to "data_ingestion.py" file inside the "components" folder and complete the code
+Refer "data_ingestion.py" file inside the "components" folder
+
+With this, we are done with everything of the "Data Ingestion" component from the training pipeline
+
+--------------------------------------------------------------------------------------------------------------- 
+
+	Working on "Data Validation" component from the training pipeline 
+
+In this stage, we will check whether the (new) data for prediction, is aligned with the data on which the model is trained on, ie the distribution of (each columns or each features from) both these should be same or almost same If it is not same, then we have to go for RE-TRAINING or CONTINUOUS TRAINIG our model (ie with old data + new data -- together)
+So, our training pipeline should be designed in such a way that, even if new data is being dumped inside MongoDB by the Data Engineering team, that new data along with old data -- together should be used to RE-TRAIN or do CONTINUOS TRAINIG for our model
+
+Data validation = Check whether the (new) data for prediction, is aligned with the data on which the model is
+                     trained on, ie the distribution of (each columns or each features from) both these should be 
+		     same or almost same
+		     If it is not same, then we have to go for RE-TRAINING or CONTINUOUS TRAINIG our model 
+		     (ie with old data + new data -- together)
+
+
+If we want to validate some (new) data/information, we need to have some base (old) data/information on which we will validate the new data/information -- and this validation is done wrt the number of columns/features and their data types and the names of columns/features -- ie for both the old and new data (in ML, the number of rows doesn't matter for validation) -- ie the number of columns/features and their data types and the names of columns/features in both old data and new data
+Also, we have to check whether we have enough records in each column - if not, there is no need to train our model again
+
+
+32) In our case, the base (old) data/information = "aps_failure_training_set1.csv" file
+                 the new data/information = "test.csv" and "train.csv"  -- both are inside "dataset" folder
+ie using the "aps_failure_training_set1.csv" file we will validate both "test.csv" file and "train.csv" file
+
+because on "aps_failure_training_set1.csv" file itself, we had performed EDA and preprocessing and then the processed file itself, we dumped inside MongoDB and converted into 'json' files (this much part is done by Data Engineering Team)  -- and then downloaded all the 'json' files as a dataframe (ie "test.csv" file and "train.csv" file) (this part is done by the Data Scientists team)
+
+We will fetch the number of columns/features, the names of columns/features and their distribution -- from the "aps_failure_training_set1.csv" file and "test.csv" , "train.csv" -- to do the validation
+
+33) To understand what is validation exactly,
+Inside the main project folder (ie "Sensor Fault Detection" folder), create a folder named as "Validation(ipynb)"
+Inside the "Validation(ipynb)" folder, create a file named as "validate.ipynb"  
+
+34) We will now define the inputs to the validation phase
+Go to the file "config_entity.py" inside the "entity" folder
+Refer the file "config_entity.py" inside the "entity" folder
+
+35) We will now define the outputs of the validation phase
+Go to the file "artifact_entity.py" inside the "entity" folder
+Refer the file "artifact_entity.py" inside the "entity" folder
+
+36) We can now we can work on the "Data Validation" COMPONENT itself
+Go to the file "data_validation.py" inside the "components" folder
+Refer the file "data_validation.py" inside the "components" folder
+
+37)To save the report (data validation report) -- ie ".yaml" file, we will write a helper function in "utils.py" file inside the "utils" folder
+Refer the "utils.py" file inside the "utils" folder  -- ie (B) --
+                                                        
+38) Come back to the file "data_validation.py" inside the "components" folder and complete it
+Refer the file "data_validation.py" inside the "components" folder
+
+39) After executing the file "data_validation.py" inside the "components" folder, we see that the output from "base dataframe" is a "string" and the output from "train dataframe and test dataframe" is a "float"
+So to do the data conversion, let us write a helper function inside the "utils.py" file inside the "utils" folder
+Refer the "utils.py" file inside the "utils" folder  -- ie (C) --
+
+With this, we are done with everything of the "Data Validation" component from the training pipeline
+
+---------------------------------------------------------------------------------------------------------------
+
+	Working on "Data Transformation" component from the training pipeline 
+
+
+Open the file "APS_failure_prediction.ipynb" within the "EDA and Preprocessing" folder -- and check what all data transformations we need to do
+In the "Data Transformation" phase, we will do these --
+
+i) In our dataset we see that there is a lot of imbalance - "pos" is very less than "neg" - in the target column. So to balance this, based on the dataset we will populate (/create) new datapoints for the "pos" class
+ii) In our dataset, most of the columns are numerical -- so we will use "RobustScaler()" -- it is useful whenever we have OUTLIERS in the data
+(If we don't have outliers, we can use "standard scaler or minmax scaler")
+iii) And in few of the rows in our dataset, we have NULL values - so to impute(/fill) those values, we will use "SimpleImputer()"
+
+
+
+A few points before we start data transformation
+
+* After doing data transformation, the values/ data will change (in "train.csv" file and "test.csv" file)
+So, we need to save the TRANSFORMED dataset (ie transformed train and test files) somewhere.
+Also, we need to APPLY THE SAME TRANSFORMATIONS to our "PREDICTION PIPLINE" as well 
+(Because, whatever transformations are applied during training, the same should be applied during prediction too)
+So, we need to save the "Transformation steps" too somewhere
+
+
+* In other words, we need to save these 3 things --- (ie we will have to create these 3 things)
+
+i) the transformed train data 
+ii) the transformed test data
+iii) the transformation object -- which contains transformation steps (using which we can do the transformation)
+
+
+40) We will first define the inputs for "Data Transformation" phase
+Go to the file "config_entity.py" inside the "entity" folder
+Refer the file "config_entity.py" inside the "entity" folder
+
+41) We will define the outputs of "Data Transformation" phase
+Go to the file "artifact_entity.py" inside the "entity" folder
+Refer the file "artifact_entity.py" inside the "entity" folder
+
+42) We can now we can work on the "Data Transformation" COMPONENT itself
+Go to the file "data_transformation.py" inside the "components" folder
+Refer the file "data_transformation.py" inside the "components" folder
+
+43) We have to save our target encoder. To do this, we will define some helper functions. It is better if we define some functions to save and load our objects as ".pkl" files. 
+We have written the functions inside the file "utils.py" inside the "utils" folder.
+Refer the "utils.py" file inside the "utils" folder  -- ie (D) --
+
+44) When we are transforming our datasets, our dataframes are getting converted to arrays.
+So, we need to have a function which can save our numpy array as a file and also one more function to load that file into an numpy array format ie the file that we have saved, it should be loaded back as a numpy array. To do this, we will define some helper functions. 
+We have written the functions inside the file "utils.py" inside the "utils" folder.
+Refer the "utils.py" file inside the "utils" folder  -- ie (E) --
+
+45) Come back to the file "data_transformation.py" inside the "components" folder and complete it
+Refer the file "data_validation.py" inside the "components" folder
+
+With this, we are done with everything of the "Data Transformation" component from the training pipeline
+
+--------------------------------------------------------------------------------------------------------------
+		
+	Working on "Model Trainer" component from the training pipeline
+
+
+We will train the model, then calculate f1 score (because it is a classification problem) and then we will save our model.
+
+46) We will first define the inputs for "Model Trainer" phase
+Go to the file "config_entity.py" inside the "entity" folder
+Refer the file "config_entity.py" inside the "entity" folder 
+
+47) We will define the outputs of "Model Trainer" phase
+Go to the file "artifact_entity.py" inside the "entity" folder
+Refer the file "artifact_entity.py" inside the "entity" folder
+
+48) We can now we can work on the "Model Trainer" COMPONENT itself
+Go to the file "model_trainer.py" inside the "components" folder
+Refer the file "model_trainer.py" inside the "components" folder
+
+With this, we are done with everything of the "Model Trainer" component from the training pipeline
+
+--------------------------------------------------------------------------------------------------------------
+
+
+Before moving to the "Model Evaluation" phase, we need to do a few things --
+
+
+49) Now that we have our "saved model" (ie "model.pkl"), whenever we want to deploy it, along with "model.pkl", we also need the other saved objects or files ie "transformer.pkl" file, "target_encoder.pkl" etc -- ie all the other files too are required -- for our model to be used in production.
+So, we need to define some helper function -- so that we can have/maintain all these files together ie in a single location/directory 
+To do this, go to step 50)
+
+50) Inside the "sensor" folder, create a new file called as "predictor.py".
+The task of the file "predictor.py" is to -- access/read the LATEST MODEL from the "saved_models" inside the "sensor" folder and based on this accessed/read model, do the PREDICTIONS 
+Refer the "predictor.py" file inside the "sensor" folder
+
+We do all this so that whatever files are generated during the training process, we can get their locations and then we can load those files during PREDICTION also -- ie in the PREDICTION PIPELINE also
+
+---------------------------------------------------------------------------------------------------------------
+
+
+	Working on "Model Evaluation" component from the training pipeline
+
+
+Suppose we already had one model in production (ie one model was already being used). These models (which are already being used), are saved inside a folder called as "saved_models" inside the "sensor" folder.
+And in the previous phase, we have completed "Model Training". 
+Now, we have to compare the performance of both -- the model which was already in production and the newly trained model. Whose performance is better, we will keep that model only
+
+Using the file "predictor.py" inside the "sensor" folder, we got the required locations (ie of the latest model which is being used in production and the newly trained model which we trained).
+So, now we can compare the performance of both and decide accordingly
+
+
+The model which we will get after running the training pipeline, that model we will save. And then we will use that model do the prediction.
+There are 2 types of predictions which we can do --
+
+i) Instance prediction = in this, we create a "Prediction EndPoint API" -- whenever we send a request for prediction, the API will use the model which is saved/stored somewhere -- and does prediction -- and gives back the predicted value and we will do it for SINGLE RECORD only
+ii) Batch prediction = in this, we have an input file (example .csv file with 100k records -- observe that there are MULTIPLE RECORDS) -- and we have a code (batch prediction code) -- we run the code -- and the code uses the model (which is saved/stored somewhere) -- and after prediction is done, a new (output) file is generated ie "prediction file"
+
+51) We will first define the inputs for "Model Evaluation" phase
+Go to the file "config_entity.py" inside the "entity" folder
+Refer the file "config_entity.py" inside the "entity" folder 
+
+52)  We will define the outputs of "Model Evaluation" phase
+Go to the file "artifact_entity.py" inside the "entity" folder
+Refer the file "artifact_entity.py" inside the "entity" folder
+
+53) We can now we can work on the "Model Evaluation" COMPONENT itself
+Go to the file "model_evaluation.py" inside the "components" folder
+Refer the file "model_evaluation.py" inside the "components" folder
+
+With this, we are done with everything of the "Model Evaluation" component from the training pipeline
+
+-------------------------------------------------------------------------------------------------------------
+
+
+	Working on "Model Pusher" component from the training pipeline
+
+
+In this stage, we will store the model (whichever is the best one after the "Model Evaluation" phase) inside hard drive or cloud etc etc
+ie after "Model Evaluation", if the (newly) trained model performs better than the model which is already being used in production, then this (newly) trained model should be pushed/saved inside the "saved_model" folder inside the "sensor" folder -- and this (newly) trained model is the LATEST model -- and from now on, we should start using this model (newly) trained model itself, for production
+and for that, we will copy all the files generated ie "transformer.pkl", "model.pkl", "target_encoder.pkl" and others if any - and we will save it (/push it) to the "saved models" folder inside the "sensor" folder
+
+We will create a new folder called as "saved_models" inside the main project folder (ie "Sensor Fault Detection" folder). Inside this, we will have folders "0","1","2", ....
+"2" is the LATEST FOLDER
+Each of these folders "0","1","2",.... will have three files -- "transformer.pkl","model.pkl","target_encoder.pkl"
+ie the folder "0" -- will have three files -- "transformer.pkl","model.pkl","target_encoder.pkl"
+   the folder "1" -- will have three files -- "transformer.pkl","model.pkl","target_encoder.pkl"
+   the folder "2" -- will have three files -- "transformer.pkl","model.pkl","target_encoder.pkl" etc etc .....
+
+We will create the "Prediction_API" which will always load the 3 files ("transformer.pkl","model.pkl","target_encoder.pkl") from the LATEST FOLDER 
+ie whichever folder name has the biggest value (numerical value)  
+(example - out of 0,1,2 -- "2" is the biggest -- so "2" is the LATEST FOLDER) -- to process any incoming request and to do the prediction
+Also, just to keep some backup -- we can sync the "saved_models" folder with the "S3Bucket" 
+
+
+Summarising, 
+
+i) We will create a folder named as "saved_model" -- which is not inside/within any folder ie it is an independent folder -- and inside it, we will dump all the 3 objects ie the files "transformer.pkl","model.pkl","target_encoder.pkl"
+WE WILL USE THIS FOLDER FOR THE 'PREDICTION PIPELINE'
+ii) Inside the "model_pusher" folder, we will create another "saved_models" folder
+(NOTE that this is the 2nd time we are creating "saved_models" folder, but location is different)
+and inside it, we will dump all the 3 objects ie the files "transformer.pkl","model.pkl","target_encoder.pkl"
+WE WILL USE THIS FOLDER JUST TO SEE THE OUTPUTs -- ie EVERYTIME WE RUN THE PIPELINE, WE SHOULD BE ABLE TO SEE THE OUTPUT 
+
+
+54) We will first define the inputs for "Model Pusher" phase
+Go to the file "config_entity.py" inside the "entity" folder
+Refer the file "config_entity.py" inside the "entity" folder
+
+55)  We will define the outputs of "Model Pusher" phase
+Go to the file "artifact_entity.py" inside the "entity" folder
+Refer the file "artifact_entity.py" inside the "entity" folder
+
+56) We can now we can work on the "Model Pusher" COMPONENT itself
+Go to the file "model_evaluation.py" inside the "components" folder
+Refer the file "model_evaluation.py" inside the "components" folder 
+
+With this, we are done with everything of the "Model Pusher" component from the training pipeline
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+57) For each and every component from the training pipeline, we will write the code to (test/) see whether that part is running successfully or not
+Inside the "pipeline" folder, create a new file named as "training_pipeline.py"
+We will write the code inside the file "training_pipeline.py" inside the "pipeline" folder
+Refer the file "training_pipeline.py" inside the "pipeline" folder
+
+58) Complete the file "main.py" inside the main project folder (ie "Sensor Fault Detection" folder)
+Refer the file "main.py" inside the main project folder (ie "Sensor Fault Detection" folder)
+
+
+WITH THIS, WE ARE DONE WITH THE ENTIRE TRAINING PIPELINE
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+   ********* TO RUN THE TRAINING PIPELINE (EVERYTHING FROM THE VERY BEGINNING), JUST RUN THE "main.py" FILE *********
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+			WE WILL NOW WORK ON THE PREDICTION PIPELINE
+
+
+The model which we will get after running the training pipeline, that model we will save. And then we will use that model do the prediction.
+There are 2 types of predictions which we can do --
+
+i) Instance prediction = in this, we create a "Prediction EndPoint API" -- whenever we send a request for prediction, the API will use the model which is saved/stored somewhere -- and does prediction -- and gives back the predicted value and we will do it for SINGLE RECORD only
+ii) Batch prediction = in this, we have an input file (example .csv file with 100k records -- observe that there are MULTIPLE RECORDS) -- and we have a code (batch prediction code) -- we run the code -- and the code uses the model (which is saved/stored somewhere) -- and after prediction is done, a new (output) file is generated ie "prediction file"
+
+59) We will now do the batch prediction
+Inside the "pipeline" folder, create a new file named as "batch_prediction.py"
+Refer the file "batch_prediction.py" inside the "pipeline" folder
+
+60) Prediction file name will be named like this -- 
+    Suppose input file name is "sensor1.csv", then 
+    after prediciton, the output file name will be "sensor1_{timestamp}.csv"
+    And this output file, we will save in the "prediction" folder
+
+
+So, the PREDICTION PIPELINE looks like this --
+
+create 'prediction' directory -> read the input file -> load the transformer -> input array is got -> load the model 
+-> make prediction -> load target encoder (predicted output is numerical, so convert the output column into categorical) -> categorical prediction is got -> output file = input file + filled columns of "prediction" column and "cat_pred" column -> convert the dataframe to csv -> save the prediction file
+
+
+WITH THIS, WE ARE DONE WITH THE ENTIRE PREDICTION PIPELINE
+
+
+
+
+			######### WITH THIS, WE ARE DONE WITH THE ENTIRE PROJECT!!! #########
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+17min

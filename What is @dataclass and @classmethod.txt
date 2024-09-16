@@ -1,0 +1,53 @@
+		@dataclass
+
+In Python, a data class is a class that is designed to only hold data values. They aren't different from regular classes, but they usually don't have any other methods. They are typically used to store information that will be passed between different parts of a program or a system.
+
+However, when creating classes to work only as data containers, writing the __init__ method repeatedly can generate a great amount of work and potential errors.
+
+The dataclasses module, a feature introduced in Python 3.7, provides a way to create data classes in a simpler manner without the need to write methods. 
+
+As a starting example, let's say we're implementing a class to store data about a certain group of people. For each person, we'll have attributes such as name, age, height, and email address. This is what a regular class looks like:
+
+class Person():
+    def __init__(self, name, age, height, email):
+        self.name = name
+        self.age = age
+        self.height = height
+        self.email = email
+
+
+If we use the dataclasses module, however, we need to import dataclass to use it as a decorator in the class we're creating. When we do that, we no longer need to write the init function, only specify the attributes of the class and their types. Here's the same Person class, implemented in this way:
+
+
+
+from dataclasses import dataclass
+
+@dataclass
+class Person():
+    name: str
+    age: int
+    height: float
+    email: str
+
+
+We can also set default values to the class attributes:
+
+@dataclass
+class Person():
+    name: str = 'Joe'
+    age: int = 30
+    height: float = 1.85
+    email: str = 'joe@dataquest.io'
+
+print(Person())
+Person(name='Joe', age=30, height=1.85, email='joe@dataquest.io')
+--------------------------------------------------------------------------------------------------------
+		
+		@classmethod
+
+The classmethod() is an inbuilt function in Python, which returns a class method for a given function. This means that classmethod() is a built-in Python function that transforms a regular method into a class method. When a method is defined using the @classmethod decorator (which internally calls classmethod()), the method is bound to the class and not to an instance of the class. As a result, the method receives the class (cls) as its first argument, rather than an instance (self).
+
+In normal cases, when we use "self" -- everytime when we create an instance of the class, an object is created.
+And object1 and object2 -- have their own memory space and are independent of each other. If we change something (value) of object1, then it has no effect on object2 -- ie object1 and object2 are independent of each other.
+But when we use @classmethod, whatever is passed or done inside a classmethod, those changes are propagated into all the objects in one go itself ie those changes are reflected in each and every object.
+------------------------------------------------------------------------------------------------------------
